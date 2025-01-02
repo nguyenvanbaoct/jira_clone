@@ -16,13 +16,6 @@ export function isAxiosUnauthorizedError<UnauthorizedError>(error: unknown): err
   return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized
 }
 
-export function isAxiosExpiredTokenError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
-  return (
-    isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error) &&
-    error.response?.data?.data?.name === 'EXPIRED_TOKEN'
-  )
-}
-
 export function formatCurrency(currency: number) {
   return new Intl.NumberFormat('de-DE').format(currency)
 }

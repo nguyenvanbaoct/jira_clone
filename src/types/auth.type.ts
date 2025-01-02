@@ -1,12 +1,11 @@
-import { User } from './user.type'
+import { Content } from 'src/types/content.type'
 import { SuccessResponse } from './utils.type'
 
 export type AuthResponse = SuccessResponse<{
-  access_token: string
-  refresh_token: string
-  expires_refresh_token: number
+  accessToken: string
   expires: number
-  user: User
+  content: Content
+  dateTime: string
 }>
 
-export type RefreshTokenResponse = SuccessResponse<{ access_token: string }>
+export type RefreshTokenResponse = SuccessResponse<{ accessToken: string }>

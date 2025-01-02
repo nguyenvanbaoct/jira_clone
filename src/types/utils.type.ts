@@ -1,11 +1,11 @@
-export interface SuccessResponse<Data> {
+export interface SuccessResponse<Content> {
   message: string
-  data: Data
+  content: Content
 }
 
-export interface ErrorResponse<Data> {
+export interface ErrorResponse<Content> {
   message: string
-  data?: Data
+  content?: Content
 }
 
 export type NoUndefinedField<T> = {
