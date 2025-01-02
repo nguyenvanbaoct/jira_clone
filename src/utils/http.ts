@@ -38,7 +38,7 @@ class Http {
           const data = response.data as AuthResponse
           this.accessToken = data.content.accessToken
           setAccessTokenToLS(this.accessToken)
-          setProfileToLS(data.content.content)
+          setProfileToLS(data.content)
         } else if (url === URL_LOGOUT) {
           this.accessToken = ''
           clearLocalStorage()
