@@ -2,7 +2,7 @@ import { AuthResponse } from 'src/types/auth.type'
 import http from 'src/utils/http'
 
 export const URL_LOGIN = 'api/Users/signin'
-export const URL_REGISTER = 'register'
+export const URL_REGISTER = 'api/Users/signup'
 export const URL_LOGOUT = 'logout'
 export const URL_REFRESH_TOKEN = 'refresh-access-token'
 

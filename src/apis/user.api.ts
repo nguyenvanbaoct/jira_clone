@@ -1,25 +1,13 @@
-import { User } from 'src/types/user.type'
+import { ResponseUser } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
-interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {
-  password?: string
-  newPassword?: string
-}
+export const URL_GET_USER = '/api/Users/getUser'
 
 const userApi = {
-  getProfile() {
-    return http.get<SuccessResponse<User>>('me')
-  },
-  updateProfile(body: BodyUpdateProfile) {
-    return http.put<SuccessResponse<User>>('user', body)
-  },
-  uploadAvatar(body: FormData) {
-    return http.post<SuccessResponse<string>>('user/upload-avatar', body, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  getAllUsers() {
+    return http.get<SuccessResponse<ResponseUser[]>>(URL_GET_USER)
   }
 }
+
 export default userApi

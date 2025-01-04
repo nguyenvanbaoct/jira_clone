@@ -35,12 +35,11 @@ export default function Login() {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         setIsAuthenticated(true)
-        setProfile(data.data.data.user)
         navigata('/')
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<Schema, 'confirm_password'>>>(error)) {
-          const formError = error.response?.data.data
+          const formError = error.response?.data.content
           if (formError) {
             Object.keys(formError).forEach((key) => {
               setError(key as keyof Omit<Schema, 'confirm_password'>, {
