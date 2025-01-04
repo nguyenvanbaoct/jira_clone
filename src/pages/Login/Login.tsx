@@ -16,7 +16,7 @@ type FormData = Pick<Schema, 'email' | 'password'>
 
 const loginSchema = schema.pick(['email', 'password'])
 export default function Login() {
-  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const { setIsAuthenticated } = useContext(AppContext)
   const navigata = useNavigate()
   const {
     register,
@@ -33,7 +33,7 @@ export default function Login() {
 
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         setIsAuthenticated(true)
         navigata('/')
       },
