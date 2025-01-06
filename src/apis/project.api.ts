@@ -1,5 +1,5 @@
 import {
-  AssignUserProjectPayload,
+  AssignUsersProjectPayload,
   ProjectDetailResponse,
   ProjectListResponse,
   ResponseProjectCategory,
@@ -14,11 +14,6 @@ export const URL_GET_PROJECT_CATEGORY = '/api/ProjectCategory'
 export const URL_UPDATE_PROJECT = '/api/Project/updateProject'
 export const URL_DELETE_PROJECT = 'api/Project/deleteProject'
 export const URL_ASSIGN_PROJECT_MEMBER = '/api/Project/assignUserProject'
-
-export interface AssignUsersProjectPayload {
-  projectId: number
-  userIds: number[]
-}
 
 const projectApi = {
   getAllProjects() {

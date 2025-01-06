@@ -1,10 +1,16 @@
 import { Space, Table, Tag, Input, Button, Avatar, Tooltip, Modal, Form, Select } from 'antd'
 import type { TableProps } from 'antd'
-import { Project, ProjectDetailResponse, ResponseProjectCategory, UpdateProjectPayload } from 'src/types/project.type'
+import {
+  Project,
+  ProjectDetailResponse,
+  ResponseProjectCategory,
+  UpdateProjectPayload,
+  AssignUsersProjectPayload
+} from 'src/types/project.type'
 import { useState } from 'react'
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import projectApi, { AssignUsersProjectPayload } from 'src/apis/project.api'
+import projectApi from 'src/apis/project.api'
 import { toast } from 'react-toastify'
 import { SuccessResponse } from 'src/types/utils.type'
 import { ResponseUser } from 'src/types/user.type'
@@ -43,14 +49,14 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
     }
   })
 
-  const { data, mutate: getProjectDetail } = useMutation({
-    mutationFn: (projectId: number) => projectApi.getProjectDetail(projectId),
-    onSuccess: (data: ProjectDetailResponse) => {
+  const { data, mutate: getProjectDetail } = useMutation<SuccessResponse<ProjectDetailResponse>, Error, number>({
+    mutationFn: (projectId: number) => projectApi.getProjectDetail(projectId).then((res) => res.data),
+    onSuccess: (response) => {
       editForm.setFieldsValue({
-        projectName: data.data.content.projectName,
-        description: data.data.content.description,
-        categoryId: data.data.content.projectCategory.id,
-        alias: data.data.content.alias
+        projectName: response.content.projectName,
+        description: response.content.description,
+        categoryId: response.content.projectCategory.id,
+        alias: response.content.alias
       })
       setIsEditModalOpen(true)
     }
@@ -68,7 +74,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
     Error,
     { projectId: number; payload: UpdateProjectPayload }
   >({
-    mutationFn: ({ projectId, payload }) => projectApi.updateProject(projectId, payload),
+    mutationFn: ({ projectId, payload }) => projectApi.updateProject(projectId, payload).then((res) => res.data),
     onSuccess: () => {
       toast.success('Cập nhật dự án thành công!')
       queryClient.invalidateQueries({ queryKey: ['projectList'] })
@@ -85,7 +91,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
   })
 
   const addUsersMutation = useMutation<SuccessResponse<unknown>, Error, AssignUsersProjectPayload>({
-    mutationFn: (payload: AssignUsersProjectPayload) => projectApi.assignProjectMember(payload),
+    mutationFn: (payload: AssignUsersProjectPayload) => projectApi.assignProjectMember(payload).then((res) => res.data),
     onSuccess: () => {
       toast.success('Thêm thành viên thành công!')
       queryClient.invalidateQueries({ queryKey: ['projectList'] })
@@ -125,14 +131,14 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
     editForm
       .validateFields()
       .then((values: ProjectFormValues) => {
-        const projectId = data?.data.content.id
+        const projectId = data?.content.id
         if (projectId) {
           const updatePayload: UpdateProjectPayload = {
             id: projectId,
             projectName: values.projectName,
             description: values.description,
             categoryId: values.categoryId.toString(),
-            creator: data.data.content.creator.id
+            creator: data?.content.creator.id
           }
           updateProjectMutation.mutate({ projectId, payload: updatePayload })
         }
@@ -179,11 +185,16 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
       title: 'Members',
       key: 'members',
       render: (_, record) => (
-        <Avatar.Group maxCount={3} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+        <Avatar.Group
+          max={{
+            count: 3,
+            style: { color: '#f56a00', backgroundColor: '#fde3cf' }
+          }}
+        >
           {record.members.map((member) => (
             <Tooltip title={member.name} key={member.userId}>
               <Avatar src={member.avatar} alt={member.name}>
-                {!member.avatar && member.name.charAt(0).toUpperCase()}
+                {!member.avatar && member.name?.charAt(0)?.toUpperCase()}
               </Avatar>
             </Tooltip>
           ))}
@@ -209,7 +220,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
             type='primary'
             danger
             onClick={() => handleDeleteProject(record.id)}
-            loading={deleteProjectMutation.isLoading}
+            loading={deleteProjectMutation.isPending}
           >
             Delete
           </Button>
@@ -251,7 +262,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
         okText='Update'
         okButtonProps={{
           className: 'bg-blue-500',
-          loading: updateProjectMutation.isLoading
+          loading: updateProjectMutation.isPending
         }}
       >
         <Form form={editForm} layout='vertical' initialValues={{ remember: true }}>
@@ -304,13 +315,15 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
             key='add'
             type='primary'
             className='bg-blue-500'
-            loading={addUsersMutation.isLoading}
+            loading={addUsersMutation.isPending}
             onClick={() =>
               selectedProjectId &&
-              addUsersMutation.mutate({
-                projectId: selectedProjectId,
-                userIds: selectedUsers
-              })
+              selectedUsers.forEach((userId) =>
+                addUsersMutation.mutate({
+                  projectId: selectedProjectId,
+                  userId: userId
+                })
+              )
             }
             disabled={selectedUsers.length === 0}
           >
@@ -319,19 +332,19 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
         ]}
       >
         <Select
-          mode='multiple'
           style={{ width: '100%' }}
-          placeholder='Select users to add'
-          onChange={(values) => setSelectedUsers(values)}
-          loading={getUsersMutation.isLoading}
+          placeholder='Select user to add'
+          onChange={(value) => setSelectedUsers([value])}
+          loading={getUsersMutation.isPending}
+          value={selectedUsers[0]}
         >
           {userList.map((user) => (
             <Select.Option key={user.userId} value={user.userId}>
               <div className='flex items-center gap-2'>
                 <Avatar src={user.avatar} size='small'>
-                  {!user.avatar && (user.name ?? '').charAt(0).toUpperCase()}
+                  {!user.avatar && user.name?.charAt(0)?.toUpperCase()}
                 </Avatar>
-                <span>{user.name ?? 'Unknown User'}</span>
+                <span>{user.name}</span>
               </div>
             </Select.Option>
           ))}

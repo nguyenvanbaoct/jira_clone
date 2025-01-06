@@ -102,11 +102,16 @@ export interface DetailedProjectResponse {
 }
 
 export interface ProjectDetailResponse {
-  data: {
-    statusCode: number
-    message: string
-    content: Project
+  projectName: string
+  description: string
+  projectCategory: {
+    id: number
   }
+  alias: string
+  creator: {
+    id: number
+  }
+  id: number
 }
 
 export interface ResponseProjectCategory {
@@ -122,7 +127,7 @@ export interface UpdateProjectPayload {
   categoryId: string
 }
 
-export interface AssignUserProjectPayload {
+export interface AssignUsersProjectPayload {
   projectId: number
   userId: number
 }
