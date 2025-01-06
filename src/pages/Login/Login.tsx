@@ -80,8 +80,8 @@ export default function Login() {
                 <Button
                   type='submit'
                   className='flex w-full content-center justify-center bg-orange px-2 py-4 text-center text-sm uppercase text-white hover:bg-opacity-90'
-                  isLoading={loginMutation.isLoading}
-                  disabled={loginMutation.isLoading}
+                  isLoading={loginMutation.isPending}
+                  disabled={loginMutation.isPending}
                 >
                   Đăng nhập
                 </Button>

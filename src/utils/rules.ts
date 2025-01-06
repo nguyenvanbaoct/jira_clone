@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { RegisterOptions, UseFormGetValues } from 'react-hook-form'
+import { RegisterOptions } from 'react-hook-form'
 import * as yup from 'yup'
 
 type Rules = { [key in 'email' | 'password' | 'phone']?: RegisterOptions }
-export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
+export const getRules = (): Rules => ({
   email: {
     required: {
       value: true,

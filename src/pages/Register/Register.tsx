@@ -32,7 +32,7 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data)
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         navigata(path.login)
       },
       onError: (error) => {
