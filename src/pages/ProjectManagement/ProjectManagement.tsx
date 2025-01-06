@@ -57,8 +57,6 @@ export default function ProjectManagement() {
     return <Spin fullscreen={true} />
   }
 
-  console.log('data', ProjectListResponse)
-
   const items: MenuItem[] = [
     getItem('Project management', 'project', <ProjectOutlined />, [
       getItem('Create project', 'createProject', <SettingOutlined />),
