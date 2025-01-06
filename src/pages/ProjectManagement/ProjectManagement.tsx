@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import React, { useState, useContext } from 'react'
 import { ProjectOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
@@ -9,6 +9,8 @@ import { AppContext } from 'src/contexts/app.context'
 import { useNavigate } from 'react-router-dom'
 import { clearLocalStorage } from 'src/utils/auth'
 import path from 'src/constants/path'
+import { ResponseProjectCategory } from 'src/types/project.type'
+import CreateProject from './CreateProject/CreateProject'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -30,19 +32,41 @@ export default function ProjectManagement() {
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken()
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [categories, setCategories] = useState<ResponseProjectCategory[]>([])
+
+  const { mutate: getCategories } = useMutation({
+    mutationFn: () => projectApi.getProjectCategory(),
+    onSuccess: (response) => {
+      setCategories(response.data.content)
+    }
+  })
+
+  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'createProject') {
+      setIsCreateModalOpen(true)
+      getCategories()
+    }
+  }
+
+  const handleCreateModalClose = () => {
+    setIsCreateModalOpen(false)
+  }
 
   const { data: ProjectListResponse, isLoading } = useQuery({
     queryKey: ['projectList'] as const,
     queryFn: async () => {
       const response = await projectApi.getAllProjects()
       return {
-        content: response.data.content.map((item: any) => ({
-          members: item.members,
-          creator: item.creator,
-          id: item.id,
-          projectName: item.projectName,
-          ...item
-        }))
+        content: response.data.content
+          .map((item: any) => ({
+            members: item.members,
+            creator: item.creator,
+            id: item.id,
+            projectName: item.projectName,
+            ...item
+          }))
+          .reverse()
       }
     }
   })
@@ -76,7 +100,7 @@ export default function ProjectManagement() {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} width={230}>
         <div className='demo-logo-vertical' />
-        <Menu theme='dark' defaultSelectedKeys={['project']} mode='inline' items={items} />
+        <Menu theme='dark' defaultSelectedKeys={['project']} mode='inline' items={items} onClick={handleMenuClick} />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
@@ -95,6 +119,8 @@ export default function ProjectManagement() {
         </Content>
         <Footer style={{ textAlign: 'center' }}>Cyberbugs ©{new Date().getFullYear()} Created by Cybersoft</Footer>
       </Layout>
+
+      <CreateProject isOpen={isCreateModalOpen} onClose={handleCreateModalClose} categories={categories} />
     </Layout>
   )
 }

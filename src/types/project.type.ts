@@ -131,3 +131,10 @@ export interface AssignUsersProjectPayload {
   projectId: number
   userId: number
 }
+
+export interface CreateProjectPayload {
+  projectName: string
+  description: string
+  categoryId: number
+  alias: string
+}

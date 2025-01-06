@@ -164,7 +164,8 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
     {
       title: 'Id',
       dataIndex: 'id',
-      key: 'id'
+      key: 'id',
+      sorter: (a, b) => a.id - b.id
     },
     {
       title: 'Project name',

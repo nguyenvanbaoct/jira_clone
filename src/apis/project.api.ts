@@ -1,5 +1,6 @@
 import {
   AssignUsersProjectPayload,
+  CreateProjectPayload,
   ProjectDetailResponse,
   ProjectListResponse,
   ResponseProjectCategory,
@@ -14,6 +15,7 @@ export const URL_GET_PROJECT_CATEGORY = '/api/ProjectCategory'
 export const URL_UPDATE_PROJECT = '/api/Project/updateProject'
 export const URL_DELETE_PROJECT = 'api/Project/deleteProject'
 export const URL_ASSIGN_PROJECT_MEMBER = '/api/Project/assignUserProject'
+export const URL_CREATE_PROJECT = '/api/Project/createProject'
 
 const projectApi = {
   getAllProjects() {
@@ -32,7 +34,10 @@ const projectApi = {
     return http.delete<SuccessResponse<ProjectListResponse[]>>(`${URL_DELETE_PROJECT}?projectId=${id}`)
   },
   assignProjectMember(payload: AssignUsersProjectPayload) {
-    return http.post(URL_ASSIGN_PROJECT_MEMBER, payload)
+    return http.post<SuccessResponse<ProjectDetailResponse>>(URL_ASSIGN_PROJECT_MEMBER, payload)
+  },
+  createProject(payload: CreateProjectPayload) {
+    return http.post<SuccessResponse<ProjectDetailResponse>>(URL_CREATE_PROJECT, payload)
   }
 }
 
