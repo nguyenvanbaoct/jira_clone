@@ -93,10 +93,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
   const addUsersMutation = useMutation<SuccessResponse<unknown>, Error, AssignUsersProjectPayload>({
     mutationFn: (payload: AssignUsersProjectPayload) => projectApi.assignProjectMember(payload).then((res) => res.data),
     onSuccess: () => {
-      toast.success('Thêm thành viên thành công!')
       queryClient.invalidateQueries({ queryKey: ['projectList'] })
       setIsAddUserModalOpen(false)
       setSelectedUsers([])
+      toast.success('Thêm thành viên thành công!')
     }
   })
 

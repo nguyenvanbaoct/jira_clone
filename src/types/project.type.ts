@@ -1,3 +1,5 @@
+import { TaskType } from 'src/types/task.type.api'
+
 interface Member {
   userId: number
   name: string
@@ -49,14 +51,9 @@ interface PriorityTask {
   priority: string
 }
 
-interface TaskTypeDetail {
-  id: number
-  taskType: string
-}
-
 interface TaskDetail {
   priorityTask: PriorityTask
-  taskTypeDetail: TaskTypeDetail
+  taskTypeDetail: TaskType
   assigness: Assignee[]
   lstComment: Comment[]
   taskId: number
@@ -138,3 +135,18 @@ export interface CreateProjectPayload {
   categoryId: number
   alias: string
 }
+
+export interface CreateTaskPayload {
+  listUserAsign: number[]
+  taskName: string
+  description: string
+  statusId: string
+  originalEstimate: number
+  timeTrackingSpent: number
+  timeTrackingRemaining: number
+  projectId: number
+  typeId: number
+  priorityId: number
+}
+
+

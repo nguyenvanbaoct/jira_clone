@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom'
 import { clearLocalStorage } from 'src/utils/auth'
 import path from 'src/constants/path'
 import { ResponseProjectCategory } from 'src/types/project.type'
-import CreateProject from './CreateProject/CreateProject'
+import CreateProject from 'src/pages/ProjectManagement/CreateProject'
+import CreateTask from 'src/pages/ProjectManagement/CreateTask'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -34,6 +35,7 @@ export default function ProjectManagement() {
   } = theme.useToken()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [categories, setCategories] = useState<ResponseProjectCategory[]>([])
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false)
 
   const { mutate: getCategories } = useMutation({
     mutationFn: () => projectApi.getProjectCategory(),
@@ -46,11 +48,17 @@ export default function ProjectManagement() {
     if (key === 'createProject') {
       setIsCreateModalOpen(true)
       getCategories()
+    } else if (key === 'createTask') {
+      setIsCreateTaskModalOpen(true)
     }
   }
 
   const handleCreateModalClose = () => {
     setIsCreateModalOpen(false)
+  }
+
+  const handleCreateTaskModalClose = () => {
+    setIsCreateTaskModalOpen(false)
   }
 
   const { data: ProjectListResponse, isLoading } = useQuery({
@@ -121,6 +129,11 @@ export default function ProjectManagement() {
       </Layout>
 
       <CreateProject isOpen={isCreateModalOpen} onClose={handleCreateModalClose} categories={categories} />
+      <CreateTask
+        isOpen={isCreateTaskModalOpen}
+        onClose={handleCreateTaskModalClose}
+        projectList={ProjectListResponse?.content || []}
+      />
     </Layout>
   )
 }

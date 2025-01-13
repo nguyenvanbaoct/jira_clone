@@ -38,26 +38,6 @@ export default function useRouteElements() {
           ),
           index: true
         }
-        // {
-        //   path: path.login,
-        //   element: (
-        //     <RegisterLayout>
-        //       <Suspense>
-        //         <Login />
-        //       </Suspense>
-        //     </RegisterLayout>
-        //   )
-        // },
-        // {
-        //   path: path.register,
-        //   element: (
-        //     <RegisterLayout>
-        //       <Suspense>
-        //         <Register />
-        //       </Suspense>
-        //     </RegisterLayout>
-        //   )
-        // }
       ]
     },
     {

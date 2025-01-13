@@ -1,1 +1,3 @@
-export { default } from './CreateProject'
+import CreateProject from './CreateProject'
+
+export default CreateProject

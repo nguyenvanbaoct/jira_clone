@@ -1,13 +1,10 @@
 export interface User {
-  _id: string
+  id: number
   email: string
-  name?: string
-  date_of_birth?: string
-  avatar?: string
-  address?: string
-  phone?: string
-  createdAt: string
-  updatedAt: string
+  name: string
+  avatar: string
+  phoneNumber: string
+  accessToken: string
 }
 export interface ResponseUser {
   userId?: number

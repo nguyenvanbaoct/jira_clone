@@ -16,8 +16,8 @@ type FormData = Pick<Schema, 'email' | 'password'>
 
 const loginSchema = schema.pick(['email', 'password'])
 export default function Login() {
-  const { setIsAuthenticated } = useContext(AppContext)
-  const navigata = useNavigate()
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     setError,
@@ -33,9 +33,18 @@ export default function Login() {
 
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         setIsAuthenticated(true)
-        navigata('/')
+        const profile = data.data.content
+        setProfile({
+          id: Number(profile.id),
+          email: profile.email,
+          name: profile.name,
+          avatar: profile.avatar || '',
+          phoneNumber: profile.phoneNumber,
+          accessToken: profile.accessToken || ''
+        })
+        navigate(path.home)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<Schema, 'confirm_password'>>>(error)) {

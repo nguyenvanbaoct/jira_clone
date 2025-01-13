@@ -17,10 +17,10 @@ export default function CreateProject({ isOpen, onClose, categories }: CreatePro
   const createProjectMutation = useMutation({
     mutationFn: (payload: CreateProjectPayload) => projectApi.createProject(payload),
     onSuccess: () => {
-      toast.success('Tạo dự án thành công!')
       queryClient.invalidateQueries({ queryKey: ['projectList'] })
       onClose()
       form.resetFields()
+      toast.success('Tạo dự án thành công!')
     }
   })
 
