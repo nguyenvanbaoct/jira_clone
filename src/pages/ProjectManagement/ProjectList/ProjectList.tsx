@@ -76,10 +76,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projectList }) => {
   >({
     mutationFn: ({ projectId, payload }) => projectApi.updateProject(projectId, payload).then((res) => res.data),
     onSuccess: () => {
-      toast.success('Cập nhật dự án thành công!')
       queryClient.invalidateQueries({ queryKey: ['projectList'] })
       setIsEditModalOpen(false)
       editForm.resetFields()
+      toast.success('Cập nhật dự án thành công!')
     }
   })
 

@@ -20,7 +20,6 @@ export default function CreateTask({ isOpen, onClose, projectList }: Props) {
   const [form] = Form.useForm()
   const { profile } = useContext(AppContext)
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null)
-  console.log(profile)
   const filteredProjects = projectList.filter((project) => String(project.creator.id) === String(profile?.id))
 
   const { data: priorities, isLoading: isPriorityLoading } = useQuery({

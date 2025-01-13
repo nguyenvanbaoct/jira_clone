@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import plugin from "tailwindcss/plugin";
-import lineClamp from "@tailwindcss/line-clamp";
 import defaultTheme from "tailwindcss/defaultTheme";
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -28,6 +27,5 @@ export default {
                 },
             });
         }),
-        lineClamp,
     ],
 };

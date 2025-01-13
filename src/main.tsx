@@ -7,7 +7,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppProvider } from './contexts/app.context'
 import ErrorBoundary from './components/ErrorBoundary'
-import { HelmetProvider } from 'react-helmet-async'
 import 'antd/dist/reset.css'
 
 const queryClient = new QueryClient({
@@ -22,16 +21,14 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
-      <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <AppProvider>
-            <ErrorBoundary>
-              <App />
-            </ErrorBoundary>
-          </AppProvider>
-        </QueryClientProvider>
-      </HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <AppProvider>
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        </AppProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>
 )
